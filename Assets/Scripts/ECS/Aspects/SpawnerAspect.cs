@@ -4,19 +4,9 @@ using Unity.Transforms;
 using UnityEditor.PackageManager;
 using static UnityEngine.GraphicsBuffer;
 
-// L'aspecte ens servirà com a interfície per al nostre
-// component Spawner. Així podem tenir-hi dependències,
-// incloure tot allò que ens interessa i fer funcions
-// per a accedir al codi.
 readonly partial struct SpawnerAspect : IAspect
 {
-    //Això és opcional, és una referència a nosaltres
-    //si el poseu, automàticament queda referenciat.
-    //private readonly Entity entity;
-
-    //referència que farem al nostre component spawner
     private readonly RefRW<Spawner> m_Spawner;
-    //referència que farem al nostre transformAspect
     private readonly TransformAspect m_TransformAspect;
 
 
@@ -33,7 +23,7 @@ readonly partial struct SpawnerAspect : IAspect
     private void Spawn(EntityCommandBuffer ecb)
     {
         //new Random((ushort)UnityEngine.Random.Range(0, m_Spawner.ValueRO.entityPrefabs.Length)).NextInt()
-        Entity entity = ecb.Instantiate(m_Spawner.ValueRO.entityPrefabs[0]);
+        Entity entity = ecb.Instantiate(m_Spawner.ValueRO.entityPrefabs);
 
         //inicialitzem els components de la entitat spawnejada
         float3 direction = math.normalize(m_Spawner.ValueRW.random.NextFloat3(-1, 1));

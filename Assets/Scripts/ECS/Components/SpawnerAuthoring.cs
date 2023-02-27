@@ -28,7 +28,7 @@ class SpawnerAuthoring : MonoBehaviour
 
             AddComponent(new Spawner
             {
-                entityPrefabs = entities.ToNativeArray(Allocator.Temp),
+                entityPrefabs = entities.ToNativeArray(Allocator.Temp)[0],
                 spawnRate = authoring.spawnRate,
                 elapsedTime = authoring.spawnRate,
                 random = authoring.useSeed ?
@@ -41,7 +41,9 @@ class SpawnerAuthoring : MonoBehaviour
 
 public struct Spawner : IComponentData
 {
-    public NativeArray<Entity> entityPrefabs;
+    //public NativeArray<Entity> entityPrefabs;
+    public Entity entityPrefabs;
+
     public float spawnRate;
 
     public float elapsedTime;
