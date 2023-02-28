@@ -1,15 +1,14 @@
+using System.Diagnostics;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEditor.PackageManager;
-using static UnityEngine.GraphicsBuffer;
 
 readonly partial struct SpawnerAspect : IAspect
 {
     private readonly RefRW<Spawner> m_Spawner;
-    private readonly TransformAspect m_TransformAspect;
-
-
+    
     public void ElapseTime(float deltaTime, EntityCommandBuffer ecb)
     {
         m_Spawner.ValueRW.elapsedTime -= deltaTime;
@@ -22,10 +21,10 @@ readonly partial struct SpawnerAspect : IAspect
 
     private void Spawn(EntityCommandBuffer ecb)
     {
-        //new Random((ushort)UnityEngine.Random.Range(0, m_Spawner.ValueRO.entityPrefabs.Length)).NextInt()
-        Entity entity = ecb.Instantiate(m_Spawner.ValueRO.entityPrefabs);
-
-        //inicialitzem els components de la entitat spawnejada
+        Entity entity;
+        if (m_Spawner.ValueRW.random.NextInt(0, 3) == 0) entity = ecb.Instantiate(m_Spawner.ValueRO.entityPrefabRed);
+        else if (m_Spawner.ValueRW.random.NextInt(0, 3) == 1) entity = ecb.Instantiate(m_Spawner.ValueRO.entityPrefabPurple);
+        else entity = ecb.Instantiate(m_Spawner.ValueRO.entityPrefabOrange);
         float3 direction = math.normalize(m_Spawner.ValueRW.random.NextFloat3(-1, 1));
         float3 position = m_Spawner.ValueRW.random.NextFloat3(-10, 10);
         float speed = m_Spawner.ValueRW.random.NextFloat(.5f, 5f);

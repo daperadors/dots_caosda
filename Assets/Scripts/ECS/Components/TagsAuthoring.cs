@@ -17,6 +17,8 @@ class TagsAuthoring : MonoBehaviour
             if (authoring.red) AddComponent(new RedTag());
             if (authoring.orange) AddComponent(new PurpleTag());
             if (authoring.purple) AddComponent(new OrangeTag());
+
+            AddComponent(new EnemyTag());
         }
     }
 }
@@ -28,5 +30,8 @@ public struct PurpleTag : IComponentData
 {
 }
 public struct OrangeTag : IComponentData
+{
+}
+public struct EnemyTag : IComponentData
 {
 }

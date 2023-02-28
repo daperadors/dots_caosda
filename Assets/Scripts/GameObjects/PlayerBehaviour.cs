@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using TMPro;
 using Unity.Entities;
 using Unity.Transforms;
@@ -24,8 +25,14 @@ public class PlayerBehaviour : MonoBehaviour
     private float m_RadiusSQ;
     public float RangeRadiusSQ => m_RadiusSQ;
 
+    EntityManager entityManager;
+
     private Unity.Mathematics.float3 m_Position;
     public Unity.Mathematics.float3 Position => m_Position;
+
+    public float speed = 5f;
+    float mouseX;
+    float mouseY;
 
     private void Awake()
     {
@@ -33,42 +40,48 @@ public class PlayerBehaviour : MonoBehaviour
             m_Instance = this;
         else
             Destroy(gameObject);
-
-        m_Position = transform.position;
+        entityManager= World.DefaultGameObjectInjectionWorld.EntityManager;
 
     }
 
     private void Update()
     {
-        Vector3 movement = Vector3.zero;
-        if (Input.GetKey(KeyCode.W))
-            movement += Vector3.forward;
-        if (Input.GetKey(KeyCode.S))
-            movement -= Vector3.forward;
-        if (Input.GetKey(KeyCode.A))
-            movement -= Vector3.right;
-        if (Input.GetKey(KeyCode.D))
-            movement += Vector3.right;
-        if(Input.GetKey(KeyCode.Q))
-            movement += Vector3.up;
-        if (Input.GetKey(KeyCode.E))
-            movement -= Vector3.up;
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
 
-        transform.position += movement.normalized * m_MovementSpeed * Time.deltaTime;
-        m_Position = transform.position;
+        mouseX += Input.GetAxis("Mouse X");
+        mouseY -= Input.GetAxis("Mouse Y");
+
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) movement += Vector3.up * speed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) movement += Vector3.down * speed * Time.deltaTime;
+
+
+        transform.Translate(movement, Space.Self);
+        transform.rotation = Quaternion.Euler(mouseY, mouseX, 0f);
+
 
     }
 
     private void LateUpdate()
     {
-        /*EntityQuery inRangeEntitiesQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(IsInRangeTag));
-        Unity.Collections.NativeArray<Entity> inRangeEntities = inRangeEntitiesQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
+        EntityQuery enemyQueryCollision = entityManager.CreateEntityQuery(typeof(EnemyTag));
+        Unity.Collections.NativeArray<Entity> enemiesEntities = enemyQueryCollision.ToEntityArray(Unity.Collections.Allocator.Temp);
 
-        m_Text.text = inRangeEntities.Length + "";
-        foreach(Entity entity in inRangeEntities)
+        foreach(Entity entity in enemiesEntities)
         {
-            Vector3 entityPosition= World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<WorldTransform>(entity).Position;
-            Debug.DrawLine(transform.position, entityPosition, Color.green);
-        }*/
+            if (World.DefaultGameObjectInjectionWorld.EntityManager.Exists(entity))
+            {
+                Vector3 entityPosition = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<WorldTransform>(entity).Position;
+
+                if (Vector2.Distance(entityPosition, transform.position) < 2f)
+                {
+                    //entityManager.DestroyEntity(entity);
+                }
+
+            }
+            
+        }
     }
+
 }
