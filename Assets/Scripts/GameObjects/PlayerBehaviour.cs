@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using TMPro;
 using Unity.Entities;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI m_Text;
 
+    [SerializeField]
+    private Material m_Material;
 
     private static PlayerBehaviour m_Instance;
     public static PlayerBehaviour Instance => m_Instance;
@@ -76,7 +79,8 @@ public class PlayerBehaviour : MonoBehaviour
 
                 if (Vector2.Distance(entityPosition, transform.position) < 2f)
                 {
-                    //entityManager.DestroyEntity(entity);
+                    entityManager.DestroyEntity(entity);
+                    transform.localScale += (Vector3.one / 5);
                 }
 
             }
