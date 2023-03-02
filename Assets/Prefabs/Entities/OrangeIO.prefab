@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1947365924583428991}
   - component: {fileID: 1947365924583428986}
   - component: {fileID: 9124076376894300498}
+  - component: {fileID: -7418098424725028399}
   m_Layer: 0
   m_Name: OrangeIO
   m_TagString: Untagged
@@ -114,3 +115,20 @@ MonoBehaviour:
   red: 0
   orange: 1
   purple: 0
+--- !u!114 &-7418098424725028399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947365924583428990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b6467bcd530cd4d809fae70ea0ca9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value:
+    x: 0
+    y: 0
+    z: 0
+    w: 0

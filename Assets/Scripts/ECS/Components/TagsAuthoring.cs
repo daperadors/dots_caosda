@@ -14,11 +14,29 @@ class TagsAuthoring : MonoBehaviour
 
         public override void Bake(TagsAuthoring authoring)
         {
-            if (authoring.red) AddComponent(new RedTag());
-            if (authoring.orange) AddComponent(new PurpleTag());
-            if (authoring.purple) AddComponent(new OrangeTag());
+            Unity.Rendering.URPMaterialPropertyBaseColor colorComponent = default(Unity.Rendering.URPMaterialPropertyBaseColor);
+
+            if (authoring.red)
+            {
+                colorComponent.Value = new float4(1, 0, 0, 1);
+                AddComponent(new RedTag());
+            }
+            if (authoring.orange)
+            {
+                colorComponent.Value = new float4(0, 35, 100, 0);
+                AddComponent(new OrangeTag());
+            }
+
+            if (authoring.purple)
+            {
+                colorComponent.Value = new float4(0, 1, 0, 0.5f);
+                AddComponent(new PurpleTag());
+            }
+
 
             AddComponent(new EnemyTag());
+            AddComponent(colorComponent);
+
         }
     }
 }

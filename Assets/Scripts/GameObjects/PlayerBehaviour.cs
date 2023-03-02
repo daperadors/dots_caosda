@@ -79,7 +79,7 @@ public class PlayerBehaviour : MonoBehaviour
 
                 if (Vector2.Distance(entityPosition, transform.position) < 2f)
                 {
-                    entityManager.DestroyEntity(entity);
+                    //entityManager.SetSharedComponentData<URPMaterialPropertyBaseColor>(entity, new Unity.Mathematics.float4(1, 1, 1, 1););
                     transform.localScale += (Vector3.one / 5);
                 }
 
