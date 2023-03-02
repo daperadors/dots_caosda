@@ -32,7 +32,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private Unity.Mathematics.float3 m_Position;
     public Unity.Mathematics.float3 Position => m_Position;
-
+    public Unity.Rendering.URPMaterialPropertyBaseColor colorComponent;
     public float speed = 5f;
     float mouseX;
     float mouseY;
@@ -44,11 +44,13 @@ public class PlayerBehaviour : MonoBehaviour
         else
             Destroy(gameObject);
         entityManager= World.DefaultGameObjectInjectionWorld.EntityManager;
-
+        colorComponent = default(Unity.Rendering.URPMaterialPropertyBaseColor);
+        colorComponent.Value = new Unity.Mathematics.float4(0, 1, 0, 1);
     }
 
     private void Update()
     {
+        m_Position = transform.position;
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
@@ -79,8 +81,10 @@ public class PlayerBehaviour : MonoBehaviour
 
                 if (Vector2.Distance(entityPosition, transform.position) < 2f)
                 {
-                    //entityManager.SetSharedComponentData<URPMaterialPropertyBaseColor>(entity, new Unity.Mathematics.float4(1, 1, 1, 1););
-                    transform.localScale += (Vector3.one / 5);
+
+                    /* entityManager.RemoveComponent<URPMaterialPropertyBaseColor>(entity);
+                    entityManager.AddComponentData<URPMaterialPropertyBaseColor>(entity, colorComponent);*/
+                     transform.localScale += (Vector3.one / 5);
                 }
 
             }

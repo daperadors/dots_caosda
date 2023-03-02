@@ -40,7 +40,5 @@ readonly partial struct SpawnerAspect : IAspect
             Position = position
         });
 
-        //Per defecte les entitats no són a prop del jugador
-       // ecb.SetComponentEnabled<IsInRangeTag>(entity, false);
     }
 }
