@@ -18,7 +18,7 @@ class TagsAuthoring : MonoBehaviour
 
             if (authoring.red)
             {
-                colorComponent.Value = new float4(1, 0, 0, 1);
+                colorComponent.Value = new float4(165, 42, 42, 1);
                 AddComponent(new RedTag());
             }
             if (authoring.orange)

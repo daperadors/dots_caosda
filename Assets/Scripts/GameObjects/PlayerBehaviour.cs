@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -25,7 +26,7 @@ public class PlayerBehaviour : MonoBehaviour
     private static PlayerBehaviour m_Instance;
     public static PlayerBehaviour Instance => m_Instance;
 
-    private float m_RadiusSQ;
+    [SerializeField] private float m_RadiusSQ;
     public float RangeRadiusSQ => m_RadiusSQ;
 
     EntityManager entityManager;
@@ -46,6 +47,13 @@ public class PlayerBehaviour : MonoBehaviour
         entityManager= World.DefaultGameObjectInjectionWorld.EntityManager;
         colorComponent = default(Unity.Rendering.URPMaterialPropertyBaseColor);
         colorComponent.Value = new Unity.Mathematics.float4(0, 1, 0, 1);
+        UpdateRadius();
+    }
+
+    private void UpdateRadius()
+    {
+        m_RadiusSQ = transform.localScale.x / 2;
+        m_RadiusSQ *= m_RadiusSQ;
     }
 
     private void Update()
@@ -70,10 +78,12 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void LateUpdate()
     {
-        EntityQuery enemyQueryCollision = entityManager.CreateEntityQuery(typeof(EnemyTag));
+        EntityQuery enemyQueryCollision = entityManager.CreateEntityQuery(typeof(TimeToLive));
         Unity.Collections.NativeArray<Entity> enemiesEntities = enemyQueryCollision.ToEntityArray(Unity.Collections.Allocator.Temp);
-
-        foreach(Entity entity in enemiesEntities)
+        if(enemiesEntities.Length>0)
+            Grow(enemiesEntities.Length);
+        /*
+       foreach(Entity entity in enemiesEntities)
         {
             if (World.DefaultGameObjectInjectionWorld.EntityManager.Exists(entity))
             {
@@ -82,14 +92,20 @@ public class PlayerBehaviour : MonoBehaviour
                 if (Vector2.Distance(entityPosition, transform.position) < 2f)
                 {
 
-                    /* entityManager.RemoveComponent<URPMaterialPropertyBaseColor>(entity);
-                    entityManager.AddComponentData<URPMaterialPropertyBaseColor>(entity, colorComponent);*/
+                    entityManager.RemoveComponent<URPMaterialPropertyBaseColor>(entity);
+                    entityManager.AddComponentData<URPMaterialPropertyBaseColor>(entity, colorComponent);
                      transform.localScale += (Vector3.one / 5);
                 }
 
             }
             
         }
+        */
     }
 
+    internal void Grow(int amount)
+    {
+        transform.localScale = transform.localScale + Vector3.one * amount * Time.deltaTime;
+        UpdateRadius();
+    }
 }

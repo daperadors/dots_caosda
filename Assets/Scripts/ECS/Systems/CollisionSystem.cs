@@ -17,7 +17,6 @@ public partial class CollisionSystem : SystemBase
 {
 
     EntityManager entityManager;
-    private float maxDistance = 2f;
     [BurstCompile]
     protected override void OnCreate()
     {
@@ -39,13 +38,13 @@ public partial class CollisionSystem : SystemBase
 
 
         EntityCommandBuffer ecbSingleton = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(World.Unmanaged);
-
+        bool playerCollided = false;
         Entities.WithAll<LocalToWorld>().WithoutBurst().ForEach((Entity entity, TransformAspect transform) =>
         {
             playerPosition = player.Position;
             float distance = CalculateDistance(transform.LocalPosition, playerPosition);
             
-            if (distance <= maxDistance)
+            if (distance <= playerRadiusSQ)
             {
                 if(!EntityManager.HasComponent<TimeToLive>(entity))
                 {
@@ -58,8 +57,6 @@ public partial class CollisionSystem : SystemBase
 
         }).Run();
 
-
-
         foreach (CollisionAspect collision in SystemAPI.Query<CollisionAspect>())
         {
             collision.ControlTime(deltaTime, ecbSingleton);
@@ -67,6 +64,6 @@ public partial class CollisionSystem : SystemBase
     }
     private float CalculateDistance(float3 pointA, float3 pointB)
     {
-        return math.distance(pointA, pointB);
+        return math.distancesq(pointA, pointB);
     }
 }
